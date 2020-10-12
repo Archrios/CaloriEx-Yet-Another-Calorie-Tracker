@@ -1,31 +1,18 @@
 package model;
 
-public class Exercise {
-    private String name;
-    private String description;
-    private int calories;
+// Represents a Exercise having a name, number of calories burned
+// and an optional description of the exercise
+public class Exercise extends Activity {
 
+    // REQUIRES: Calories > 0
+    // EFFECTS: Exercise is constructed with a given name, description and number of calories burned
     public Exercise(String name, String description, int calories) {
-        this.name = name;
-        this.description = description;
-        this.calories = calories;
+        super(name, description, calories);
     }
 
+    // REQUIRES: Calories > 0
+    // EFFECTS: Exercise is constructed with a given name and number of calories burned
     public Exercise(String name, int calories) {
-        this.name = name;
-        this.description = "";
-        this.calories = calories;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public int getCalories() {
-        return this.calories;
+        super(name, calories);
     }
 }

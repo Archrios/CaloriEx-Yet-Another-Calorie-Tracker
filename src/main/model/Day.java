@@ -1,36 +1,58 @@
 package model;
 
-import model.Meal;
-import model.Exercise;
+import com.sun.jmx.remote.internal.RMIExporter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-
+//Represents a day which contains a list of meals eaten and a list of exercises done
 public class Day {
     private ArrayList<Meal> listOfM;
     private ArrayList<Exercise> listOfE;
+    private Calendar date = Calendar.getInstance();
 
+    // EFFECTS: Constructs a day with empty list of exercises and meals, with the date as the current date
     public Day() {
         listOfE = new ArrayList<Exercise>();
         listOfM = new ArrayList<Meal>();
     }
 
+    // EFFECTS: Constructs a day with empty list of exercises and meals, with the date based on user input
+    public Day(int year, int month, int day) {
+        listOfE = new ArrayList<Exercise>();
+        listOfM = new ArrayList<Meal>();
+        date.set(year, month, day);
+    }
+
+    // REQUIRES: calories > 0
+    // MODIFIES: this
+    // EFFECTS: adds a Meal to the list of Meals with a name, description, and number of calories
     public void addMeal(String name, String description, int calories) {
         listOfM.add(new Meal(name, description, calories));
     }
 
+    // REQUIRES: calories > 0
+    // MODIFIES: this
+    // EFFECTS: adds a Meal to the list of Meals with a name, and number of calories
     public void addMeal(String name, int calories) {
         listOfM.add(new Meal(name, calories));
     }
 
+    // REQUIRES: calories > 0
+    // MODIFIES: this
+    // EFFECTS: adds an Exercise to the list of Exercise with a name, description, and calories burned
     public void addExercise(String name, String description, int calories) {
         listOfE.add(new Exercise(name, description, calories));
     }
 
+    // REQUIRES: calories > 0
+    // MODIFIES: this
+    // EFFECTS: adds an Exercise to the list of Exercise with a name, and calories burned
     public void addExercise(String name, int calories) {
         listOfE.add(new Exercise(name, calories));
     }
 
+    // EFFECTS: returns the total number of calories consumed today
     public int caloriesIn() {
         int total = 0;
         for (Meal m:listOfM) {
@@ -39,6 +61,7 @@ public class Day {
         return total;
     }
 
+    // EFFECTS: returns the total number of calories burned today
     public int caloriesOut() {
         int total = 0;
         for (Exercise e:listOfE) {
@@ -47,7 +70,28 @@ public class Day {
         return total;
     }
 
+    // EFFECTS: returns the net total of calories consumed today
     public int caloricTotal() {
         return this.caloriesIn() - this.caloriesOut();
+    }
+
+    // EFFECTS: returns a formatted list of the names of all the Exercises done today based on order of entry
+    public String exerciseNames() {
+        String exercises = "";
+        for (Exercise e:listOfE) {
+            exercises += e.getName();
+            exercises += "\n";
+        }
+        return exercises;
+    }
+
+    // EFFECTS: returns a formatted list of the names of all the Meals eaten today based on order of entry
+    public String mealNames() {
+        String meals = "";
+        for (Meal m:listOfM) {
+            meals += m.getName();
+            meals += "\n";
+        }
+        return meals;
     }
 }
