@@ -21,7 +21,9 @@ public class Day {
     public Day(int year, int month, int day) {
         listOfE = new ArrayList<Exercise>();
         listOfM = new ArrayList<Meal>();
-        date.set(year, month, day);
+        //Java is weird and starts months with 0; Jan is 0, and Dec is 11 so its easier to do so here
+        //than telling user to manually offset
+        date.set(year, month - 1, day);
     }
 
     // REQUIRES: calories > 0
@@ -94,4 +96,17 @@ public class Day {
         }
         return meals;
     }
+
+    public Calendar getDate() {
+        return this.date;
+    }
+
+    public ArrayList<Exercise> getListOfE() {
+        return listOfE;
+    }
+
+    public ArrayList<Meal> getListOfM() {
+        return listOfM;
+    }
+
 }
