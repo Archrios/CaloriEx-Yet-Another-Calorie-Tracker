@@ -27,7 +27,7 @@ public class DayTest {
     public void testDefaultConstructor() {
         assertEquals(0, test.getListOfE().size());
         assertEquals(0, test.getListOfM().size());
-        assertEquals(cal, test.getDate());
+        assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
     }
 
     @Test
@@ -206,7 +206,61 @@ public class DayTest {
         assertEquals("Sushi\nMcDonalds\nCereal with Milk\n",test.mealNames());
     }
 
+    @Test
+    public void testMealDetailsWithNoMeals() {
+        assertEquals("", test.mealAllDetails());
+    }
 
+    @Test
+    public void testMealDetailsWithOneMealsWithDescription() {
+        test.addMeal("McDonalds", mdesc1, 725);
+        assertEquals("McDonalds: 725\n"+mdesc1+"\n", test.mealAllDetails());
+    }
+
+    @Test
+    public void testMealDetailsWithOneMealsWithNoDescription() {
+        test.addMeal("McDonalds", 725);
+        assertEquals("McDonalds: 725\nNo Description\n", test.mealAllDetails());
+    }
+
+    @Test
+    public void testMealDetailsWithMultipleMealsWithAndWithoutDescription() {
+        test.addMeal("Sushi", mdesc2, 550);
+        test.addMeal("McDonalds", mdesc1, 725);
+        test.addMeal("Cereal with Milk", 275);
+        String m1 = "Sushi: 550\n"+mdesc2+"\n";
+        String m2 = "McDonalds: 725\n"+mdesc1+"\n";
+        String m3 = "Cereal with Milk: 275\nNo Description\n";
+        assertEquals(m1+m2+m3, test.mealAllDetails());
+    }
+
+    @Test
+    public void testExerciseDetailsWithNoExercises() {
+        assertEquals("", test.exerciseAllDetails());
+    }
+
+    @Test
+    public void testExerciseDetailsWithOneExercisesWithDescription() {
+        test.addExercise("Gym", edesc1, 450);
+        assertEquals("Gym: 450\n"+edesc1+"\n", test.exerciseAllDetails());
+    }
+
+    @Test
+    public void testExerciseDetailsWithOneExercisesWithNoDescription() {
+        test.addExercise("Gym", 450);
+        assertEquals("Gym: 450\nNo Description\n", test.exerciseAllDetails());
+    }
+
+    @Test
+    public void testExerciseDetailsWithMultipleExercisesWithAndWithoutDescription() {
+        test.addExercise("Swimming", edesc2, 650);
+        test.addExercise("Gym", edesc1, 450);
+        test.addExercise("Grouse Grind", 350);
+        String m1 = "Swimming: 650\n"+edesc2+"\n";
+        String m2 = "Gym: 450\n"+edesc1+"\n";
+        String m3 = "Grouse Grind: 350\nNo Description\n";
+        assertEquals(m1+m2+m3, test.exerciseAllDetails());
+    }
 
 
 

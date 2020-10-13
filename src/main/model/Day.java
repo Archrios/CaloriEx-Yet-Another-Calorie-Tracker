@@ -99,6 +99,38 @@ public class Day {
         return meals;
     }
 
+    //EFFECTS: returns a formatted list of names, calories, and desc (if it has one) of all Meals eaten today
+    // based on order of entry
+    public String mealAllDetails() {
+        String meals = "";
+        for (Meal m:listOfM) {
+            meals += (m.getName() + ": " + m.getCalories());
+            if (m.getDescription().equals("")) {
+                meals += "\nNo Description";
+            } else {
+                meals += ("\n" + m.getDescription());
+            }
+            meals += "\n";
+        }
+        return meals;
+    }
+
+    //EFFECTS: returns a formatted list of names, calories, and desc (if it has one) of all Meals eaten today
+    // based on order of entry
+    public String exerciseAllDetails() {
+        String exercises = "";
+        for (Exercise e:listOfE) {
+            exercises += (e.getName() + ": " + e.getCalories());
+            if (e.getDescription().equals("")) {
+                exercises += "\nNo Description";
+            } else {
+                exercises += ("\n" + e.getDescription());
+            }
+            exercises += "\n";
+        }
+        return exercises;
+    }
+
     public Calendar getDate() {
         return this.date;
     }
