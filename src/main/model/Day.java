@@ -17,6 +17,8 @@ public class Day {
         listOfM = new ArrayList<Meal>();
     }
 
+    //REQUIRES: MONTH is between 1 and 12, day is between 1 and 31, and actually fits according to the month
+    // nothing like February the 30th
     // EFFECTS: Constructs a day with empty list of exercises and meals, with the date based on user input
     public Day(int year, int month, int day) {
         listOfE = new ArrayList<Exercise>();
