@@ -16,7 +16,9 @@ public class CaloriEx {
     }
 
     //MODIFIES: this
-    //EFFECTS: process user inputs
+    //EFFECTS: takes user input which is used by addDay to modify the Day; if user input isnt appropriate, loops it
+    // until user input qualifies
+    // main process is then run in a loop
     private void runCaloriEx() {
         boolean running;
         boolean dayAdded;
@@ -60,7 +62,7 @@ public class CaloriEx {
     }
 
     //MODIFIES: this
-    //EFFECTS: displays main menu, and calls functions according to user input
+    //EFFECTS: displays main menu, and calls appropriate functions according to user input
     private boolean dayOperations() {
         mainMenu();
         int user = Integer.parseInt(input.next());
@@ -81,7 +83,7 @@ public class CaloriEx {
     }
 
     //MODIFIES: this
-    //EFFECTS: adds exercise to day based on user input
+    //EFFECTS: adds exercise to day using on user inputs
     private void addExercise() {
         input = new Scanner(System.in).useDelimiter("\n");
         String name;
@@ -105,7 +107,7 @@ public class CaloriEx {
     }
 
     //MODIFIES: this
-    //EFFECTS: adds meal to day based on user input
+    //EFFECTS: adds meal to day using user input
     private void addMeal() {
         input = new Scanner(System.in).useDelimiter("\n");
         String name;
@@ -128,7 +130,7 @@ public class CaloriEx {
         input = new Scanner(System.in);
     }
 
-    //EFFECTS: displays a menu of options to user
+    //EFFECTS: displays a menu of options for type of day to add
     private void startMenu() {
         System.out.println("\nWhich day would you like to add to?");
         System.out.println("t - Today");
@@ -144,7 +146,7 @@ public class CaloriEx {
         System.out.println("0: Exit application");
     }
 
-    //EFFECTS: displays a menu of options to user
+    //EFFECTS: displays summary of the day's calorie totals using Day methods
     private void caloricSummary() {
         System.out.println("\nCalories in: " + day.caloriesIn());
         System.out.println("Calories out: " + day.caloriesOut());
