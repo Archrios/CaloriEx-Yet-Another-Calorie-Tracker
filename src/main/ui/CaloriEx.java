@@ -4,15 +4,19 @@ import model.Day;
 
 import java.util.Scanner;
 
+// Calorie counter application
 public class CaloriEx {
     private Scanner input;
     //private ArrayList<Day> record = new ArrayList<Day>();
     private Day day;
 
+    //EFFECTS: Runs the CaloriEx application
     public CaloriEx() {
         runCaloriEx();
     }
 
+    //MODIFIES: this
+    //EFFECTS: process user inputs
     private void runCaloriEx() {
         boolean running;
         boolean dayAdded;
@@ -29,6 +33,8 @@ public class CaloriEx {
         System.out.println("Thanks for using CaloriEx, hope you enjoyed it!!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: modifies Day based on user inputs
     private boolean addDay(String user) {
         if (user.equals("t")) {
             //record.add(new Day());
@@ -53,6 +59,8 @@ public class CaloriEx {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: displays main menu, and calls functions according to user input
     private boolean dayOperations() {
         mainMenu();
         int user = Integer.parseInt(input.next());
@@ -72,6 +80,8 @@ public class CaloriEx {
         return true;
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds exercise to day based on user input
     private void addExercise() {
         input = new Scanner(System.in).useDelimiter("\n");
         String name;
@@ -94,6 +104,8 @@ public class CaloriEx {
         input = new Scanner(System.in);
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds meal to day based on user input
     private void addMeal() {
         input = new Scanner(System.in).useDelimiter("\n");
         String name;
@@ -116,12 +128,14 @@ public class CaloriEx {
         input = new Scanner(System.in);
     }
 
+    //EFFECTS: displays a menu of options to user
     private void startMenu() {
         System.out.println("\nWhich day would you like to add to?");
         System.out.println("t - Today");
         System.out.println("s - Select Own date");
     }
 
+    //EFFECTS: displays a menu of options to user
     private void mainMenu() {
         System.out.println("\nWhat would you like to do?");
         System.out.println("1: Add a meal/exercise");
@@ -130,18 +144,22 @@ public class CaloriEx {
         System.out.println("0: Exit application");
     }
 
+    //EFFECTS: displays a menu of options to user
     private void caloricSummary() {
         System.out.println("\nCalories in: " + day.caloriesIn());
         System.out.println("Calories out: " + day.caloriesOut());
         System.out.println("Calories total: " + day.caloricTotal());
     }
 
+    //EFFECTS: displays a menu of options to user
     private void additionMenu() {
         System.out.println("\nWhat would you like to do?");
         System.out.println("1: Add a meal");
         System.out.println("2: Add an exercise");
     }
 
+    //MODIFIES: this
+    //EFFECTS: calls methods to add meal or exercise based on user inputs
     private void addOperations() {
         additionMenu();
         int user = Integer.parseInt(input.next());
@@ -155,6 +173,7 @@ public class CaloriEx {
         }
     }
 
+    //EFFECTS: displays a menu of options to user
     private void recordMenu() {
         System.out.println("\nWhat would you like to do?");
         System.out.println("1: List of meals eaten this date");
@@ -163,6 +182,7 @@ public class CaloriEx {
         System.out.println("4: Details of exercises done this date");
     }
 
+    //EFFECTS: displays meal/exercise information based on user inputs
     private void recordOperations() {
         recordMenu();
         int user = Integer.parseInt(input.next());
