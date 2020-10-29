@@ -3,15 +3,17 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DayTest {
     private Day test;
-    private Calendar cal;
-    SimpleDateFormat df = new SimpleDateFormat("E dd-MM-yyyy");
+    //private Calendar cal;
+    private LocalDate date;
+    //SimpleDateFormat df = new SimpleDateFormat("E dd-MM-yyyy");
+    DateTimeFormatter df = DateTimeFormatter.ofPattern("E dd-MM-yyyy");
     String mdesc1 = "Big Mac, 10 piece Chicken Nuggets, with Fries and soda";
     String mdesc2 ="California Roll, Dynamite Roll, with Salmon Sashimi";
     String edesc1 ="100 Push ups, 100 Sit ups, 100 Squats and 10Km run";
@@ -20,41 +22,46 @@ public class DayTest {
     @BeforeEach
     public void runBefore() {
         test = new Day();
-        cal = Calendar.getInstance();
+        //cal = Calendar.getInstance();
     }
 
     @Test
     public void testDefaultConstructor() {
-        assertEquals(0, test.getListOfE().size());
-        assertEquals(0, test.getListOfM().size());
-        assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
+        date = LocalDate.now();
+        assertEquals(0, test.getExercises().size());
+        assertEquals(0, test.getMeals().size());
+        //assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
+        //assertEquals(df.format(date),df.format(test.getDate()));
+        assertEquals(date.toString(), test.getDate().toString());
     }
 
     @Test
     public void testConstructor() {
         test = new Day(2020, 10, 31);
-        cal.set(2020, 10 - 1, 31);
-        assertEquals(0, test.getListOfE().size());
-        assertEquals(0, test.getListOfM().size());
-        assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
+        date= LocalDate.of(2020, 10 , 31);
+        assertEquals(0, test.getExercises().size());
+        assertEquals(0, test.getMeals().size());
+        //assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
+        //assertEquals(df.format(date),df.format(test.getDate()));
+        assertEquals(date.toString(), test.getDate().toString());
     }
 
     @Test
     public void testAddMealWithDescription() {
         test.addMeal("McDonalds", mdesc1, 725);
-        assertEquals(1, test.getListOfM().size());
-        assertEquals("McDonalds", test.getListOfM().get(0).getName());
-        assertEquals(mdesc1, test.getListOfM().get(0).getDescription());
-        assertEquals(725, test.getListOfM().get(0).getCalories());
+        assertEquals(1, test.getMeals().size());
+        assertEquals("McDonalds", test.getMeals().get(0).getName());
+        assertEquals(mdesc1, test.getMeals().get(0).getDescription());
+        assertEquals(725, test.getMeals().get(0).getCalories());
     }
 
     @Test
     public void testAddMealWithNoDescription() {
         test.addMeal("McDonalds", 725);
-        assertEquals(1, test.getListOfM().size());
-        assertEquals("McDonalds", test.getListOfM().get(0).getName());
-        assertEquals("", test.getListOfM().get(0).getDescription());
-        assertEquals(725, test.getListOfM().get(0).getCalories());
+        assertEquals(1, test.getMeals().size());
+        assertEquals("McDonalds", test.getMeals().get(0).getName());
+        assertEquals("", test.getMeals().get(0).getDescription());
+        assertEquals(725, test.getMeals().get(0).getCalories());
     }
 
     @Test
@@ -62,29 +69,29 @@ public class DayTest {
         test.addMeal("Sushi", mdesc2, 550);
         test.addMeal("McDonalds", mdesc1, 725);
         test.addMeal("Cereal with Milk", 275);
-        assertEquals(3, test.getListOfM().size());
-        assertEquals("McDonalds", test.getListOfM().get(1).getName());
-        assertEquals(mdesc2, test.getListOfM().get(0).getDescription());
-        assertEquals(mdesc1, test.getListOfM().get(1).getDescription());
-        assertEquals(275, test.getListOfM().get(2).getCalories());
+        assertEquals(3, test.getMeals().size());
+        assertEquals("McDonalds", test.getMeals().get(1).getName());
+        assertEquals(mdesc2, test.getMeals().get(0).getDescription());
+        assertEquals(mdesc1, test.getMeals().get(1).getDescription());
+        assertEquals(275, test.getMeals().get(2).getCalories());
     }
 
     @Test
     public void testAddExerciseWithDescription() {
         test.addExercise("Gym", edesc1, 450);
-        assertEquals(1,test.getListOfE().size());
-        assertEquals("Gym", test.getListOfE().get(0).getName());
-        assertEquals(450, test.getListOfE().get(0).getCalories());
-        assertEquals(edesc1, test.getListOfE().get(0).getDescription());
+        assertEquals(1,test.getExercises().size());
+        assertEquals("Gym", test.getExercises().get(0).getName());
+        assertEquals(450, test.getExercises().get(0).getCalories());
+        assertEquals(edesc1, test.getExercises().get(0).getDescription());
     }
 
     @Test
     public void testAddExerciseWithNoDescription() {
         test.addExercise("Grouse Grind", 350);
-        assertEquals(1,test.getListOfE().size());
-        assertEquals("Grouse Grind", test.getListOfE().get(0).getName());
-        assertEquals(350, test.getListOfE().get(0).getCalories());
-        assertEquals("", test.getListOfE().get(0).getDescription());
+        assertEquals(1,test.getExercises().size());
+        assertEquals("Grouse Grind", test.getExercises().get(0).getName());
+        assertEquals(350, test.getExercises().get(0).getCalories());
+        assertEquals("", test.getExercises().get(0).getDescription());
     }
 
     @Test
@@ -92,10 +99,10 @@ public class DayTest {
         test.addExercise("Gym", edesc1, 450);
         test.addExercise("Grouse Grind", 350);
         test.addExercise("Swimming", edesc2, 650);
-        assertEquals(3,test.getListOfE().size());
-        assertEquals("Gym", test.getListOfE().get(0).getName());
-        assertEquals(350, test.getListOfE().get(1).getCalories());
-        assertEquals(edesc2, test.getListOfE().get(2).getDescription());
+        assertEquals(3,test.getExercises().size());
+        assertEquals("Gym", test.getExercises().get(0).getName());
+        assertEquals(350, test.getExercises().get(1).getCalories());
+        assertEquals(edesc2, test.getExercises().get(2).getDescription());
     }
 
     @Test
@@ -261,9 +268,4 @@ public class DayTest {
         String m3 = "Grouse Grind: 350\nNo Description\n";
         assertEquals(m1+m2+m3, test.exerciseAllDetails());
     }
-
-
-
-
-
 }

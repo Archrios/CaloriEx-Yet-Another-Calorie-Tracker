@@ -1,13 +1,21 @@
 package ui;
 
 import model.Day;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 // Calorie counter application
 public class CaloriEx {
     private Scanner input;
     //private ArrayList<Day> record = new ArrayList<Day>();
+    private String jsonLocation = "./data/";
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriter;
     private Day day;
 
     //EFFECTS: Runs the CaloriEx application
@@ -24,10 +32,10 @@ public class CaloriEx {
         boolean dayAdded;
         String user;
         input = new Scanner(System.in);
-        startMenu();
+        //dateMenu();
         do {
-            user = input.next();
-            dayAdded = addDay(user);
+            startMenu();
+            dayAdded = startOperations();
         } while (!dayAdded);
         do {
             running = dayOperations();
@@ -42,7 +50,6 @@ public class CaloriEx {
             //record.add(new Day());
             System.out.println("you have chosen today");
             day = new Day();
-            return true;
         } else if (user.equals("s")) {
             int year;
             int month;
@@ -54,11 +61,89 @@ public class CaloriEx {
             date = Integer.parseInt(input.next());
             //record.add(new Day(year, month, day));
             day = new Day(year, month, date);
-            return true;
         } else {
             System.out.println("User input not recognized, please try again");
             return false;
         }
+        jsonLocation += (day.getDate().toString() + ".json");
+        jsonWriter = new JsonWriter(jsonLocation);
+        jsonReader = new JsonReader(jsonLocation);
+        return true;
+    }
+
+    private void startMenu() {
+        System.out.println("\nWould you like to add a new day or load a previous day?");
+        System.out.println("1 - New Day");
+        System.out.println("2 - Load a previous date");
+    }
+
+    private boolean startOperations() {
+        int user = input.nextInt();
+        switch (user) {
+            case 1:
+                dateMenu();
+                String choice = input.next();
+                return addDay(choice);
+            case 2:
+                return loadDay();
+            default:
+                System.out.println("User input not recognized");
+                return false;
+        }
+    }
+
+    private boolean loadDay() {
+
+        boolean dateAdded = false;
+        do {
+            loadMenu();
+            String user = input.next();
+            dateAdded = loadOperations(user);
+        } while (!dateAdded);
+        try {
+            day = jsonReader.read();
+            return true;
+        } catch (IOException e) {
+            System.out.println("ISSA PROBLEMO HOMBRE");
+            resetLocation();
+            return false;
+        }
+    }
+
+    private boolean loadOperations(String user) {
+        String date;
+        if (user.equals("t")) {
+            //record.add(new Day());
+            System.out.println("you have chosen today");
+            date = LocalDate.now().toString();
+        } else if (user.equals("s")) {
+            System.out.println("Enter the date you would like to add in the following format including the dashes:");
+            System.out.println("YYYY-MM-DD");
+            date = input.next();
+        } else {
+            System.out.println("User input not recognized, please try again");
+            return false;
+        }
+        System.out.println("i want to fucking load: " + date);
+        jsonLocation += (date + ".json");
+        System.out.println("save location is: " + jsonLocation);
+        jsonWriter = new JsonWriter(jsonLocation);
+        jsonReader = new JsonReader(jsonLocation);
+        return true;
+    }
+
+    //EFFECTS: displays a menu of options for type of day to add
+    private void loadMenu() {
+        System.out.println("\nWhich day would you like to load from?");
+        System.out.println("t - Today");
+        System.out.println("s - Select Own date");
+    }
+
+    //EFFECTS: displays a menu of options for type of day to add
+    private void dateMenu() {
+        System.out.println("\nWhich day would you like to add to?");
+        System.out.println("t - Today");
+        System.out.println("s - Select Own date");
     }
 
     //MODIFIES: this
@@ -76,10 +161,24 @@ public class CaloriEx {
             case 3:
                 recordOperations();
                 break;
+            case 4:
+                saveDay();
+                break;
             case 0:
                 return false;
         }
         return true;
+    }
+
+    private void saveDay() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(day);
+            jsonWriter.close();
+            System.out.println("saveeeeddddd");
+        } catch (FileNotFoundException e) {
+            System.out.println("nooot saved :(");
+        }
     }
 
     //MODIFIES: this
@@ -130,19 +229,13 @@ public class CaloriEx {
         input = new Scanner(System.in);
     }
 
-    //EFFECTS: displays a menu of options for type of day to add
-    private void startMenu() {
-        System.out.println("\nWhich day would you like to add to?");
-        System.out.println("t - Today");
-        System.out.println("s - Select Own date");
-    }
-
     //EFFECTS: displays a menu of options to user
     private void mainMenu() {
         System.out.println("\nWhat would you like to do?");
         System.out.println("1: Add a meal/exercise");
         System.out.println("2: Check calorie summary for this date");
         System.out.println("3: Check details about meals and/or exercises done this date");
+        System.out.println("4: Save records");
         System.out.println("0: Exit application");
     }
 
@@ -202,5 +295,9 @@ public class CaloriEx {
                 System.out.println("\n" + day.exerciseAllDetails());
                 break;
         }
+    }
+
+    private void resetLocation() {
+        jsonLocation = "./data/";
     }
 }

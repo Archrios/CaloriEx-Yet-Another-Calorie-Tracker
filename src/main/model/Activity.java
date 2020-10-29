@@ -1,8 +1,11 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 //Represents an Activity having a name, number of calories associated with it
 // and an optional description of the Activity
-public abstract class Activity {
+public abstract class Activity implements Writable {
     private String name;
     private String description;
     private int calories;
@@ -21,6 +24,28 @@ public abstract class Activity {
         this.name = name;
         this.description = "";
         this.calories = calories;
+    }
+
+    public String toString() {
+        StringBuilder activity = new StringBuilder();
+        activity.append(name + ": " + calories);
+        if (description.equals("")) {
+            activity.append("\nNo Description" + "\n");
+        } else {
+            activity.append("\n" + description + "\n");
+        }
+        return activity.toString();
+    }
+
+    //EFFECTS: returns this as a JSON Object
+    //modeled after the repo https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Name", name);
+        json.put("Description", description);
+        json.put("Calories", calories);
+        return json;
     }
 
     public String getName() {
