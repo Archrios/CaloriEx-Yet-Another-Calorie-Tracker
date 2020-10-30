@@ -1,0 +1,37 @@
+{
+   "Exercises": [
+      {
+         "Description": "1km free-style, 1km breast-stroke",
+         "Calories": 650,
+         "Name": "Swimming"
+      },
+      {
+         "Description": "100 Push ups, 100 Sit ups, 100 Squats and 10Km run",
+         "Calories": 450,
+         "Name": "Gym"
+      },
+      {
+         "Description": "",
+         "Calories": 350,
+         "Name": "Grouse Grind"
+      }
+   ],
+   "Meals": [
+      {
+         "Description": "California Roll, Dynamite Roll, with Salmon Sashimi",
+         "Calories": 550,
+         "Name": "Sushi"
+      },
+      {
+         "Description": "Big Mac, 10 piece Chicken Nuggets, with Fries and soda",
+         "Calories": 725,
+         "Name": "McDonalds"
+      },
+      {
+         "Description": "",
+         "Calories": 275,
+         "Name": "Cereal with Milk"
+      }
+   ],
+   "Date": "2020-10-29"
+}

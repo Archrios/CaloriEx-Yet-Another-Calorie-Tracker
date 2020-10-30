@@ -104,7 +104,7 @@ public class CaloriEx {
             day = jsonReader.read();
             return true;
         } catch (IOException e) {
-            System.out.println("ISSA PROBLEMO HOMBRE");
+            System.out.println("File could not be found, please try again");
             resetLocation();
             return false;
         }
@@ -124,9 +124,7 @@ public class CaloriEx {
             System.out.println("User input not recognized, please try again");
             return false;
         }
-        System.out.println("i want to fucking load: " + date);
         jsonLocation += (date + ".json");
-        System.out.println("save location is: " + jsonLocation);
         jsonWriter = new JsonWriter(jsonLocation);
         jsonReader = new JsonReader(jsonLocation);
         return true;

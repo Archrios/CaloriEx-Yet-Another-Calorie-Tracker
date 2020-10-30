@@ -18,9 +18,9 @@ public class DayTest {
     //SimpleDateFormat df = new SimpleDateFormat("E dd-MM-yyyy");
     DateTimeFormatter df = DateTimeFormatter.ofPattern("E dd-MM-yyyy");
     String mdesc1 = "Big Mac, 10 piece Chicken Nuggets, with Fries and soda";
-    String mdesc2 ="California Roll, Dynamite Roll, with Salmon Sashimi";
-    String edesc1 ="100 Push ups, 100 Sit ups, 100 Squats and 10Km run";
-    String edesc2 ="1km free-style, 1km breast-stroke";
+    String mdesc2 = "California Roll, Dynamite Roll, with Salmon Sashimi";
+    String edesc1 = "100 Push ups, 100 Sit ups, 100 Squats and 10Km run";
+    String edesc2 = "1km free-style, 1km breast-stroke";
 
     @BeforeEach
     public void runBefore() {
