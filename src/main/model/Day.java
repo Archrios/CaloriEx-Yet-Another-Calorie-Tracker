@@ -138,7 +138,7 @@ public class Day implements Writable {
 
     //EFFECTS: returns the list of meals as a JSON ARRAY
     //modeled after the repo https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-    private JSONArray mealToJson() {
+    public JSONArray mealToJson() {
         JSONArray array = new JSONArray();
         for (Meal m: meals) {
             array.put(m.toJson());
@@ -148,7 +148,7 @@ public class Day implements Writable {
 
     //EFFECTS: returns the list of exercises as a JSON ARRAY
     //modeled after the repo https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-    private JSONArray exerciseToJson() {
+    public JSONArray exerciseToJson() {
         JSONArray array = new JSONArray();
         for (Exercise e: exercises) {
             array.put(e.toJson());

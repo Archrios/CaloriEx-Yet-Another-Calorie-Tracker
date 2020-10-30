@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +22,16 @@ public class MealTest {
         assertEquals("Sushi", test.getName());
         assertEquals(350, test.getCalories());
         assertEquals(desc, test.getDescription());
+    }
+
+    @Test
+    public void testToJson() {
+        String desc ="California Roll, Dynamite Roll, with Salmon Sashimi";
+        test = new Meal("Sushi",desc, 350);
+        JSONObject json = test.toJson();
+        assertEquals(test.getName(), json.getString("Name"));
+        assertEquals(test.getDescription(), json.getString("Description"));
+        assertEquals(test.getCalories(), json.getInt("Calories"));
     }
 
 }
