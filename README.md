@@ -22,3 +22,5 @@ As a user, I want to be able to
 - view all details about all meals eaten in a day
 - view all details about all exercises eaten in a day
 - total the number of calories in versus calories out for a day (if any at all. (looks at self in shame))
+- save data to files
+- load data from files
