@@ -1,0 +1,16 @@
+{
+   "Exercises": [],
+   "Meals": [
+      {
+         "Description": "",
+         "Calories": 425,
+         "Name": "mcd"
+      },
+      {
+         "Description": "cali roll",
+         "Calories": 225,
+         "Name": "sushi"
+      }
+   ],
+   "Date": "2020-11-05"
+}
