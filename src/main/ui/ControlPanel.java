@@ -4,24 +4,30 @@ import model.Day;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-public class MainPanel extends JPanel {
+public class ControlPanel extends JPanel {
     private String jsonLocation = "./data/";
+    private final File errorSoundFile = new File("data/Sounds/Error.wav").getAbsoluteFile();
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private Day day;
-    private StartPanel startPanel;
-    private DatePanel datePanel;
-    private LoadPanel loadPanel;
-    private OperationPanel operationPanel;
+    private final StartPanel startPanel;
+    private final DatePanel datePanel;
+    private final LoadPanel loadPanel;
+    private final OperationPanel operationPanel;
+    private final AddPanel addPanel;
+    private final DetailsPanel detailsPanel;
+    private static final int FIELD_WIDTH = 5;
 
 
     private class StartPanel extends JPanel {
@@ -50,19 +56,8 @@ public class MainPanel extends JPanel {
         private JButton newDayButton(String title) {
             class NewListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-//                String get = text.getText();
-//                if (get.equals("hello")) {
-//                    text.setVisible(false);
-//
-//                    text1 = new JTextField(10);
-//                    text1.setText("fuuuuuck you");
-//                    tester.add(text1);
-//                    frame.revalidate();
-//                    frame.repaint();
-//                }
                     setVisible(false);
                     datePanel.setVisible(true);
-
                 }
             }
 
@@ -74,16 +69,6 @@ public class MainPanel extends JPanel {
         private JButton loadDayButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-//                String get = text.getText();
-//                if (get.equals("hello")) {
-//                    text.setVisible(false);
-//
-//                    text1 = new JTextField(10);
-//                    text1.setText("fuuuuuck you");
-//                    tester.add(text1);
-//                    frame.revalidate();
-//                    frame.repaint();
-//                }
                     setVisible(false);
                     loadPanel.setVisible(true);
                 }
@@ -119,16 +104,6 @@ public class MainPanel extends JPanel {
         private JButton createTodayButton(String title) {
             class NewListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-//                String get = text.getText();
-//                if (get.equals("hello")) {
-//                    text.setVisible(false);
-//
-//                    text1 = new JTextField(10);
-//                    text1.setText("fuuuuuck you");
-//                    tester.add(text1);
-//                    frame.revalidate();
-//                    frame.repaint();
-//                }
                     String date = LocalDate.now().toString();
                     setJsonLocation(date);
                     try {
@@ -137,6 +112,7 @@ public class MainPanel extends JPanel {
                         operationPanel.setVisible(true);
                         setVisible(false);
                     } catch (IOException e) {
+                        playClip(errorSoundFile);
                         JOptionPane.showMessageDialog(null, "File could not be found, please try again");
                         resetLocation();
                     }
@@ -152,9 +128,8 @@ public class MainPanel extends JPanel {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
                     boolean dateAdded = false;
-                    String date;
                     do {
-                        date = JOptionPane.showInputDialog(null, "Enter Name");
+                        String date = JOptionPane.showInputDialog(null, "Enter date in this format: YYYY-MM-DD");
                         setJsonLocation(date);
                         try {
                             setDay(getJsonReader().read());
@@ -163,6 +138,7 @@ public class MainPanel extends JPanel {
                             operationPanel.setVisible(true);
                             setVisible(false);
                         } catch (IOException e) {
+                            playClip(errorSoundFile);
                             JOptionPane.showMessageDialog(null, "File could not be found, please try again");
                             resetLocation();
                         }
@@ -180,22 +156,6 @@ public class MainPanel extends JPanel {
         private final JLabel label;
         private final JButton todayButton;
         private final JButton selectButton;
-
-//    public DatePanel() {
-//        label = new JLabel("Which day would you like to load from?");
-//        todayButton = createTodayButton("Today");
-//        selectButton = createSelectButton("Select own date");
-//        todayButton.setAlignmentX(CENTER_ALIGNMENT);
-//        label.setAlignmentX(CENTER_ALIGNMENT);
-//        selectButton.setAlignmentX(CENTER_ALIGNMENT);
-//        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-//        this.add(Box.createRigidArea(new Dimension(0,20)));
-//        this.add(label);
-//        this.add(Box.createRigidArea(new Dimension(0,50)));
-//        this.add(todayButton);
-//        this.add(Box.createRigidArea(new Dimension(0,20)));
-//        this.add(selectButton);
-//    }
 
         public DatePanel() {
             label = new JLabel("Which day would you like to add to?");
@@ -216,16 +176,6 @@ public class MainPanel extends JPanel {
         private JButton createTodayButton(String title) {
             class NewListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-//                String get = text.getText();
-//                if (get.equals("hello")) {
-//                    text.setVisible(false);
-//
-//                    text1 = new JTextField(10);
-//                    text1.setText("fuuuuuck you");
-//                    tester.add(text1);
-//                    frame.revalidate();
-//                    frame.repaint();
-//                }
                     setDay(new Day());
                     setJsonLocation();
                     operationPanel.setVisible(true);
@@ -238,12 +188,12 @@ public class MainPanel extends JPanel {
             return button;
         }
 
-        private void addDay() {
+        private boolean addDay() {
             boolean dateAdded = false;
             String inputs;
             do {
                 try {
-                    inputs = JOptionPane.showInputDialog(null, "Enter Name");
+                    inputs = JOptionPane.showInputDialog(null, "Enter date in this format: YYYY-MM-DD");
                     String[] dayFields = inputs.split("-");
                     int year = Integer.parseInt(dayFields[0]);
                     int month = Integer.parseInt(dayFields[1]);
@@ -251,17 +201,27 @@ public class MainPanel extends JPanel {
                     setDay(new Day(year, month, date));
                     dateAdded = true;
                 } catch (NumberFormatException e) {
+                    playClip(errorSoundFile);
                     JOptionPane.showMessageDialog(null, "Invalid input");
+
                 } catch (DateTimeException e) {
+                    playClip(errorSoundFile);
                     JOptionPane.showMessageDialog(null, e.getMessage());
+                } catch (NullPointerException e) {
+                    playClip(errorSoundFile);
+                    break;
                 }
             } while (!dateAdded);
+            return dateAdded;
         }
 
         private JButton createSelectButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-                    addDay();
+                    boolean dayAdded = false;
+                    do {
+                        dayAdded = addDay();
+                    } while (!dayAdded);
                     setJsonLocation();
                     operationPanel.setVisible(true);
                     setVisible(false);
@@ -275,22 +235,84 @@ public class MainPanel extends JPanel {
     }
 
     private class AddPanel extends JPanel {
+        //        private JLabel label = new JLabel("What would you like to add");
+//        private JTextField name = new JTextField(FIELD_WIDTH);
+//        private JTextArea description = new JTextArea(5,FIELD_WIDTH * 3);
+//        private JTextField calories = new JTextField(FIELD_WIDTH);
+//        private JLabel nameLabel = new JLabel("Name: ");
+//        private JLabel descLabel = new JLabel("Description (optional): ");
+//        private JLabel caloriesLabel = new JLabel("Calories: ");
+//        private JButton submitButton;
+//        private JRadioButton mealButton = new JRadioButton("Meal");
+//        private JRadioButton exerciseButton = new JRadioButton("Exercise");
+//        private JLabel calorieLabel;
+//        private ButtonGroup buttonGroup = new ButtonGroup();
+//
         private JLabel label;
         private JTextField name;
-        private JTextField description;
+        private JTextArea description;
         private JTextField calories;
-        private JLabel nameLabel = new JLabel("Name: ");
-        private JLabel descLabel = new JLabel("Description: ");
-        private JLabel caloriesLabel = new JLabel("Calories: ");
+        private JLabel caloriesLabel;
+        private JLabel nameLabel;
+        private JLabel descLabel;
         private JButton submitButton;
+        private JRadioButton mealButton;
+        private JRadioButton exerciseButton;
+        private JPanel panel;
+        private ButtonGroup buttonGroup;
 
-        public AddPanel() {
-        }
+//        public AddPanel() {
+//            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+//            setandAddComponent(this, label);
+//            addComponent(this, mealButton, exerciseButton);
+//            buttonGroup.add(mealButton);
+//            buttonGroup.add(exerciseButton);
+//            addComponent(this, nameLabel, name, caloriesLabel, calories);
+//            addComponent(this, descLabel, description);
+//            submitButton = createSubmitButton("Submit");
+//            setandAddComponent(this,submitButton);
+//        }
+//
+//        public void addComponent(JPanel panel, JComponent j1, JComponent j2,JComponent j3,JComponent j4) {
+//            JPanel jpanel = new JPanel();
+//            jpanel.add(j1);
+//            jpanel.add(j2);
+//            jpanel.add(Box.createRigidArea(new Dimension(50,0)));
+//            jpanel.add(j3);
+//            jpanel.add(j4);
+//            jpanel.setAlignmentX(CENTER_ALIGNMENT);
+//            panel.add(jpanel);
+//            panel.add(Box.createRigidArea(new Dimension(0,10)));
+//        }
+//
+//        public void addComponent(JPanel panel, JComponent j1, JComponent j2) {
+//            JPanel jpanel = new JPanel();
+//            jpanel.add(j1);
+//            jpanel.add(j2);
+//            jpanel.setAlignmentX(CENTER_ALIGNMENT);
+//            panel.add(jpanel);
+//            panel.add(Box.createRigidArea(new Dimension(0,10)));
+//        }
 
         private JButton createSubmitButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-
+                    int calorieCount;
+                    try {
+                        calorieCount = Integer.parseInt(calories.getText());
+                        if (mealButton.isSelected()) {
+                            day.addMeal(name.getText(),description.getText(), calorieCount);
+                            JOptionPane.showMessageDialog(null, "Meal added Successfully");
+                        } else if (exerciseButton.isSelected()) {
+                            day.addExercise(name.getText(),description.getText(), calorieCount);
+                            JOptionPane.showMessageDialog(null, "Exercise added Successfully");
+                        }
+                        setVisible(false);
+                        operationPanel.setVisible(true);
+                    } catch (NumberFormatException e) {
+                        playClip(errorSoundFile);
+                        JOptionPane.showMessageDialog(null, "Error in Calories field, please try again");
+                    }
                 }
             }
 
@@ -299,16 +321,65 @@ public class MainPanel extends JPanel {
             return button;
         }
 
+        private void createUIComponents() {
+            panel = this;
+            submitButton = createSubmitButton("Submit");
+        }
+    }
 
+    class DetailsPanel extends JPanel {
+
+        private ButtonGroup buttonGroup;
+        private JRadioButton mealListRadioButton;
+        private JRadioButton mealDetailRadioButton;
+        private JRadioButton exerciseListRadioButton;
+        private JRadioButton exerciseDetailRadioButton;
+        private JButton submitButton;
+        private JLabel label;
+        private JPanel panel;
+
+        private JButton createSubmitButton(String title) {
+            class LoadListener implements ActionListener {
+                public void actionPerformed(ActionEvent event) {
+                    String message = "";
+                    if (mealListRadioButton.isSelected()) {
+                        message = day.mealNames();
+                    } else if (mealDetailRadioButton.isSelected()) {
+                        message = day.mealAllDetails();
+                    } else if (exerciseListRadioButton.isSelected()) {
+                        message = day.exerciseNames();
+                    } else {
+                        message = day.exerciseAllDetails();
+                    }
+                    if (message.equals("")) {
+                        message = "List is empty";
+                    }
+
+                    JOptionPane.showMessageDialog(null, message);
+                    setVisible(false);
+                    operationPanel.setVisible(true);
+                }
+            }
+
+            JButton button = new JButton(title);
+            button.addActionListener(new LoadListener());
+            return button;
+        }
+
+        private void createUIComponents() {
+            panel = this;
+            submitButton = createSubmitButton("Submit");
+
+        }
     }
 
     private class OperationPanel extends JPanel {
         private final JLabel label;
-        private JButton addButton;
-        private JButton calorieButton;
-        private JButton detailsButton;
-        private JButton saveButton;
-        private JButton exitButton;
+        private final JButton addButton;
+        private final JButton calorieButton;
+        private final JButton detailsButton;
+        private final JButton saveButton;
+        private final JButton exitButton;
 
         public OperationPanel() {
             label = new JLabel("What would you like to do");
@@ -318,18 +389,19 @@ public class MainPanel extends JPanel {
             saveButton = createSaveButton("Save records");
             exitButton = createExitButton("Exit application");
             this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            setandAddComponent(this,label);
-            setandAddComponent(this,addButton);
-            setandAddComponent(this,calorieButton);
-            setandAddComponent(this,detailsButton);
-            setandAddComponent(this,saveButton);
-            setandAddComponent(this,exitButton);
+            setandAddComponent(this, label);
+            setandAddComponent(this, addButton);
+            setandAddComponent(this, calorieButton);
+            setandAddComponent(this, detailsButton);
+            setandAddComponent(this, saveButton);
+            setandAddComponent(this, exitButton);
         }
 
         private JButton createAddButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-
+                    setVisible(false);
+                    addPanel.setVisible(true);
                 }
             }
 
@@ -341,7 +413,12 @@ public class MainPanel extends JPanel {
         private JButton createCalorieButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-
+                    StringBuilder string = new StringBuilder();
+                    string.append("Calories Summary for: " + day.getDate().toString());
+                    string.append("\n\nCalories in: " + day.caloriesIn());
+                    string.append("\nCalories out: " + day.caloriesOut());
+                    string.append("\nCalories total: " + day.caloricTotal());
+                    JOptionPane.showMessageDialog(null,string.toString());
                 }
             }
 
@@ -353,7 +430,8 @@ public class MainPanel extends JPanel {
         private JButton createDetailsButton(String title) {
             class LoadListener implements ActionListener {
                 public void actionPerformed(ActionEvent event) {
-
+                    setVisible(false);
+                    detailsPanel.setVisible(true);
                 }
             }
 
@@ -369,9 +447,9 @@ public class MainPanel extends JPanel {
                         jsonWriter.open();
                         jsonWriter.write(day);
                         jsonWriter.close();
-                        JOptionPane.showMessageDialog(null,"File saved to: " + jsonLocation);
+                        JOptionPane.showMessageDialog(null, "File saved to: " + jsonLocation);
                     } catch (FileNotFoundException e) {
-                        JOptionPane.showMessageDialog(null,"File not saved to: " + jsonLocation);
+                        JOptionPane.showMessageDialog(null, "File not saved to: " + jsonLocation);
                     }
                 }
             }
@@ -395,25 +473,76 @@ public class MainPanel extends JPanel {
     }
 
 
-    public MainPanel() {
+    public ControlPanel() {
         startPanel = new StartPanel();
         datePanel = new DatePanel();
         loadPanel = new LoadPanel();
         operationPanel = new OperationPanel();
+        addPanel = new AddPanel();
+        detailsPanel = new DetailsPanel();
+
 
         this.add(datePanel);
         this.add(startPanel);
         this.add(loadPanel);
         this.add(operationPanel);
+        this.add(addPanel);
+        this.add(detailsPanel);
         datePanel.setVisible(false);
         loadPanel.setVisible(false);
         operationPanel.setVisible(false);
+        addPanel.setVisible(false);
+        detailsPanel.setVisible(false);
+    }
+
+
+    // modeled after https://stackoverflow.com/questions/577724/trouble-playing-wav-in-java/577926#577926
+    static class AudioListener implements LineListener {
+        private boolean done = false;
+
+        @Override
+        public synchronized void update(LineEvent event) {
+            LineEvent.Type eventType = event.getType();
+            if (eventType == LineEvent.Type.STOP || eventType == LineEvent.Type.CLOSE) {
+                done = true;
+                notifyAll();
+            }
+        }
+
+        public synchronized void waitUntilDone() throws InterruptedException {
+            while (!done) {
+                wait();
+            }
+        }
+    }
+
+    // modeled after https://stackoverflow.com/questions/577724/trouble-playing-wav-in-java/577926#577926
+    private static void playClip(File clipFile) {
+        AudioListener listener = new AudioListener();
+        AudioInputStream audioInputStream = null;
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(clipFile);
+            Clip clip = AudioSystem.getClip();
+            clip.addLineListener(listener);
+            clip.open(audioInputStream);
+            try {
+                clip.start();
+                listener.waitUntilDone();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            } finally {
+                clip.close();
+            }
+            audioInputStream.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void setandAddComponent(JPanel panel, JComponent j) {
         j.setAlignmentX(CENTER_ALIGNMENT);
         panel.add(j);
-        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     public void setDay(Day date) {
