@@ -262,6 +262,7 @@ public class ControlPanel extends JPanel {
     }
 
     //ui screen/panel for adding activites to the day
+    //constructed using default constructor and using design from AddPanel.form
     private class AddPanel extends JPanel {
         //        private JLabel label = new JLabel("What would you like to add");
 //        private JTextField name = new JTextField(FIELD_WIDTH);
@@ -361,6 +362,7 @@ public class ControlPanel extends JPanel {
     }
 
     //UI screen/panel for users to submit what details they would like to see about meals/exercise
+    //constructed using default constructor and using design from DetailsPanel.form
     class DetailsPanel extends JPanel {
 
         private ButtonGroup buttonGroup;
@@ -559,6 +561,7 @@ public class ControlPanel extends JPanel {
     }
 
 
+    //EFFECTS: listener tahat ensures audio file is played in full
     // Listener class that ensures clip is played in full
     // modeled after https://stackoverflow.com/questions/577724/trouble-playing-wav-in-java/577926#577926
     static class AudioListener implements LineListener {
@@ -631,7 +634,8 @@ public class ControlPanel extends JPanel {
     }
 
     //MODIFIES: this
-    //EFFECTS:  sets the read/write location jsonLocation and creates new jsonWriter and jsonReader with that location
+    //EFFECTS:  sets the read/write location jsonLocation using Day
+    // and creates new jsonWriter and jsonReader with that location
     public void setJsonLocation() {
         jsonLocation += (day.getDate().toString() + ".json");
         jsonWriter = new JsonWriter(jsonLocation);
@@ -639,7 +643,8 @@ public class ControlPanel extends JPanel {
     }
 
     //MODIFIES: this
-    //EFFECTS: sets read/write location jsonLocation and creates new jsonWriter and jsonReader using the given String
+    //EFFECTS: sets read/write location jsonLocation using a given String
+    // and creates new jsonWriter and jsonReader using the given String
     public void setJsonLocation(String date) {
         jsonLocation += (date + ".json");
         jsonWriter = new JsonWriter(jsonLocation);
