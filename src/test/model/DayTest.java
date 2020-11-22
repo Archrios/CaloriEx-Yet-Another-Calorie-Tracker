@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,7 +31,23 @@ public class DayTest {
 
     @Test
     public void testDefaultConstructor() {
-        date = LocalDate.now();
+            date = LocalDate.now();
+            assertEquals(0, test.getExercises().size());
+            assertEquals(0, test.getMeals().size());
+            //assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
+            //assertEquals(df.format(date),df.format(test.getDate()));
+            assertEquals(date.toString(), test.getDate().toString());
+
+    }
+
+    @Test
+    public void testConstructorNoErrors() {
+        try {
+            test = new Day(2020, 10, 31);
+        } catch (DateTimeException e) {
+            fail("exception should not be thrown");
+        }
+        date= LocalDate.of(2020, 10 , 31);
         assertEquals(0, test.getExercises().size());
         assertEquals(0, test.getMeals().size());
         //assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
@@ -39,14 +56,31 @@ public class DayTest {
     }
 
     @Test
-    public void testConstructor() {
-        test = new Day(2020, 10, 31);
-        date= LocalDate.of(2020, 10 , 31);
-        assertEquals(0, test.getExercises().size());
-        assertEquals(0, test.getMeals().size());
-        //assertEquals(df.format(cal.getTime()), df.format(test.getDate().getTime()));
-        //assertEquals(df.format(date),df.format(test.getDate()));
-        assertEquals(date.toString(), test.getDate().toString());
+    public void testConstructorWithErrors() {
+        try {
+            test = new Day(2020, 13, 31);
+            fail("exception should be thrown");
+        } catch (DateTimeException e) {
+            //expected behavior
+        }
+        try {
+            test = new Day(2020, 0, 31);
+            fail("exception should be thrown");
+        } catch (DateTimeException e) {
+            //expected behavior
+        }
+        try {
+            test = new Day(2020, 10, 32);
+            fail("exception should be thrown");
+        } catch (DateTimeException e) {
+            //expected behavior
+        }
+        try {
+            test = new Day(2020, 2, 30);
+            fail("exception should be thrown");
+        } catch (DateTimeException e) {
+            //expected behavior
+        }
     }
 
     @Test

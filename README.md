@@ -24,3 +24,8 @@ As a user, I want to be able to
 - total the number of calories in versus calories out for a day (if any at all. (looks at self in shame))
 - save data to files
 - load data from files
+
+##Phase 4: Task 2
+The task chosen to be implemented is: Test and design a class in your model package that is robust.
+
+The constructor of the Day class is now robust.

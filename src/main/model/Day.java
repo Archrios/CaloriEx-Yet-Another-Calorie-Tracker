@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -21,17 +22,17 @@ public class Day implements Writable {
         date = LocalDate.now();
     }
 
-    //REQUIRES: MONTH is between 1 and 12, day is between 1 and 31, and actually fits according to the month
-    // nothing like February the 30th
-    // EFFECTS: Constructs a day with empty list of exercises and meals, with the date based on user input
-    public Day(int year, int month, int day) {
+    // EFFECTS: Robustly constructs a day with empty list of exercises and meals, with the date based on user input
+    // if the created date is invalid, throws DateTimeException
+    public Day(int year, int month, int day) throws DateTimeException {
+        date = LocalDate.of(year, month, day);
         exercises = new ArrayList<Exercise>();
         meals = new ArrayList<Meal>();
 //        //Java is weird and starts months with 0; Jan is 0, and Dec is 11 so its easier to do so here
 //        //than telling user to manually offset
 //        date.set(year, month - 1, day);
 
-        date = LocalDate.of(year, month, day);
+
     }
 
     // REQUIRES: calories > 0
