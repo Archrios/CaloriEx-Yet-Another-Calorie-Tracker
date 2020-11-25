@@ -29,3 +29,10 @@ As a user, I want to be able to
 The task chosen to be implemented is: Test and design a class in your model package that is robust.
 
 The constructor of the Day class is now robust.
+
+##Phase 4: Task 3
+I originally planned to add more fields to Meal, such as nutritional values which is why Meal and Activity are
+separate classes even though they have the exact same functionality. Otherwise, I don't think there would be
+any refactoring I would do to improve my design since it is so basic and simple. My gui on the otherhand has
+many inner private classes that could refactored as outer classes, but the way it is implemented could cause 
+a lot of coupling which is why I went the route of creating everything in one class
